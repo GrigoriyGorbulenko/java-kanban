@@ -48,12 +48,12 @@ public class Main {
             System.out.println(taskManager.getTaskById(2));
             System.out.println(taskManager.getSubTaskById(6));
             System.out.println(taskManager.getEpicById(5));
-            job.setStatus(Status.DONE);
-            taskManager.updateTask(job);
-            System.out.println(job);
+            taskManager.deleteTaskById(1);
+            //System.out.println(taskManager.getAllTask());
+            System.out.println(taskManager.getAllSubTaskByEpic(5));
 
-            subJob.setStatus(Status.DONE);
-            System.out.println(subJob);
+
+
 
 
     }
