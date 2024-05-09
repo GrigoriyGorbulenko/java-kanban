@@ -4,9 +4,13 @@ public class Task {
 
     protected String name;
     protected String description;
-    Status status;
+    protected Status status;
     protected int id;
 
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
     public Task(String name, String description,Status status ) {
         this.name = name;
         this.description = description;

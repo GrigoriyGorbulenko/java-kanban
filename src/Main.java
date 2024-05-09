@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Main {
@@ -6,57 +7,56 @@ public class Main {
 
             Task job = new Task("Обычная задача", "Сходить в магазин", Status.NEW);
 
-            Task job1 = new Task("Обычная задача", "Сходить в кино", Status.NEW);
+            Task job2 = new Task("Обычная задача", "Сходить в кино", Status.NEW);
             TaskManager taskManager = new TaskManager();
             taskManager.createTask(job);
-            taskManager.createTask(job1);
-
-
+            taskManager.createTask(job2);
             SubTask subJob = new SubTask("Подзадача номер 1", "Уборка", Status.NEW);
             SubTask subJob1 = new SubTask("Подзадача номер 2", "Готовка", Status.NEW);
 
-
-            Epic epicJob = new Epic("Большая задача номер 1", "Подготовка праздника", Status.NEW);
-            epicJob.setName("Большая задача номер 1");
-            epicJob.subTaskId.add(3);
-            epicJob.subTaskId.add(4);
             taskManager.createSubTask(subJob);
             taskManager.createSubTask(subJob1);
-
+            Epic epicJob = new Epic("Большая задача номер 1", "Подготовка праздника", Status.NEW);
+            epicJob.setSubTaskId(new ArrayList<>() {
+                {
+                    add(subJob.getId());
+                    add(subJob1.getId());
+                }
+            });
             taskManager.createEpic(epicJob);
 
-            SubTask subJob2 = new SubTask("Подзадача номер 3", "Поход за подарком", Status.NEW);
-            taskManager.createSubTask(subJob2);
-            Epic epicJob2 = new Epic("Большая задача номер 2", "День рождение", Status.NEW);
-            epicJob2.subTaskId.add(6);
+            SubTask subJob3 = new SubTask("Подзадача номер 3", "Поход за подарком", Status.NEW);
+            taskManager.createSubTask(subJob3);
 
+            Epic epicJob2 = new Epic("Большая задача номер 2", "День рождение", Status.NEW);
+            epicJob2.setSubTaskId(new ArrayList<>() {
+                {
+                    add(subJob3.getId());
+                }
+            });
             taskManager.createEpic(epicJob2);
 
-            System.out.println("Обычная задача " + job.getId() );
-            System.out.println("Обычная задача " + job1.getId() );
-
-            System.out.println("Подзадача номер 1 " + subJob.getId() + " " + subJob.getEpicId());
-            System.out.println("Подзадача номер 2 " + subJob1.getId() + " " + subJob1.getEpicId());
-            System.out.println("Большая задача номер 1 " + epicJob.getId() + " " + epicJob.getSubTaskId());
-
-            System.out.println("Подзадача номер 3 " + subJob2.getId() + " " + subJob1.getEpicId());
-            System.out.println("Большая задача номер 2 " + epicJob2.getId() + " " + epicJob2.getSubTaskId());
-
-            System.out.println(taskManager.getAllTask());
-            System.out.println(taskManager.getAllSubTask());
             System.out.println(taskManager.getAllEpic());
-            System.out.println(taskManager.getTaskById(2));
-            System.out.println(taskManager.getSubTaskById(6));
-            System.out.println(taskManager.getEpicById(5));
-            taskManager.deleteTaskById(1);
-            //System.out.println(taskManager.getAllTask());
-            System.out.println(taskManager.getAllSubTaskByEpic(5));
+            System.out.println(taskManager.getAllSubTask());
+            System.out.println(taskManager.getAllTask());
 
+            job.setStatus(Status.DONE);
+            taskManager.updateTask(job);
+            System.out.println(job);
+            subJob.setStatus(Status.IN_PROGRESS);
+            subJob1.setStatus(Status.DONE);
+            taskManager.updateSubTask(subJob);
+            taskManager.updateSubTask(subJob1);
 
+            System.out.println(subJob);
+            System.out.println(epicJob);
 
+            taskManager.deleteSubTaskById(subJob.getId());
 
+            System.out.println(taskManager.getAllSubTask());
 
-    }
-
-
+            taskManager.deleteEpicById(epicJob.getId());
+            System.out.println(taskManager.getAllEpic());
+            
+        }
 }
