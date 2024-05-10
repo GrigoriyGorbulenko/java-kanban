@@ -7,9 +7,7 @@ public class TaskManager {
     private HashMap<Integer, Task> taskMap = new HashMap<>();
     private HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     private HashMap<Integer, Epic> epicMap = new HashMap<>();
-
     private int nextId = 1;
-
 
     public int createTask(Task newTask) {
         newTask.setId(nextId++);
@@ -20,7 +18,8 @@ public class TaskManager {
     public int createSubTask(SubTask subTask) {
         subTask.setId(nextId++);
         this.subTaskMap.put(subTask.getId(), subTask);
-
+        Epic epic = epicMap.get(subTask.getEpicId());
+        syncTasks(epic);
         return subTask.getId();
     }
 
@@ -30,8 +29,6 @@ public class TaskManager {
 
         return newEpic.getId();
     }
-
-
 
     public ArrayList<Task> getAllTask() {
     return new ArrayList<>(taskMap.values());
@@ -52,12 +49,15 @@ public class TaskManager {
 
     public void removeAllSubTasks() {
         subTaskMap.clear();
-        deleteSubTask();
+        for (Epic epic : getAllEpic()) {
+            epic.setSubTaskId(new ArrayList<>());
+            epic.setStatus(Status.NEW);
+        }
     }
 
     public void removeAllEpics() {
         epicMap.clear();
-        deleteSubTask();
+        subTaskMap.clear();
     }
 
     public Task getTaskById(int id) {
@@ -72,20 +72,19 @@ public class TaskManager {
         return epicMap.get(id);
     }
 
-
     public void updateTask(Task task) {
         taskMap.put(task.getId(), task);
     }
 
-    public void updateSubTask(SubTask updateSubTask) {
-        subTaskMap.put(updateSubTask.getId(), updateSubTask);
-        Epic updateEpic = epicMap.get(updateSubTask.getEpicId());
-        syncTasks(updateEpic);
+    public void updateSubTask(SubTask subTask) {
+        subTaskMap.put(subTask.getId(), subTask);
+        Epic epic= epicMap.get(subTask.getEpicId());
+        syncTasks(epic);
     }
 
-    public void updateEpic(Epic updateEpic) {
-        epicMap.put(updateEpic.getId(), updateEpic);
-        syncTasks(updateEpic);
+    public void updateEpic(Epic epic) {
+        epicMap.put(epic.getId(), epic);
+        syncTasks(epic);
     }
 
     public void deleteTaskById(int id) {
@@ -93,36 +92,39 @@ public class TaskManager {
     }
 
     public void deleteSubTaskById(int id) {
+        Epic epic = epicMap.get(subTaskMap.get(id).getEpicId());
         subTaskMap.remove(id);
-        syncTasks(getEpicById(getSubTaskById(id).getEpicId()));
+        epic.getSubTaskId().removeIf(idSubTask -> idSubTask == id);
+        syncTasks(epic);
     }
 
     public void deleteEpicById(int id) {
+        for (Integer idSubTask : epicMap.get(id).getSubTaskId()) {
+            subTaskMap.remove(idSubTask);
+        }
         epicMap.remove(id);
     }
 
-    private void deleteSubTask(){
-        for (Epic epic: getAllEpic()) {
-            epic.setSubTaskId(new ArrayList<>());
-            epic.setStatus(Status.NEW);
-        }
-    }
-
     private void syncTasks(Epic newEpic) {
-        int check = 0;
+        int checkDone = 0;
+        int checkNew = 0;
         for (Integer subtaskId : newEpic.getSubTaskId()) {
             SubTask newSubTask = subTaskMap.get(subtaskId);
             newSubTask.setEpicId(newEpic.getId());
             if (subTaskMap.get(subtaskId).getStatus() == Status.IN_PROGRESS) {
                 newEpic.setStatus(Status.IN_PROGRESS);
             } else if (subTaskMap.get(subtaskId).getStatus() == Status.DONE) {
-                check++;
+                checkDone++;
+            } if(subTaskMap.get(subtaskId).getStatus() == Status.NEW) {
+                checkNew++;
             }
         }
-        if (check == newEpic.getSubTaskId().size() ) {
+        if (checkDone == newEpic.getSubTaskId().size() && checkDone > 0 ) {
             newEpic.setStatus(Status.DONE);
-        } else if( check > 0 && check < newEpic.getSubTaskId().size()) {
+        } else if( checkDone > 0 && checkDone < newEpic.getSubTaskId().size()) {
             newEpic.setStatus(Status.IN_PROGRESS);
+        } else if (checkNew == newEpic.getSubTaskId().size()) {
+            newEpic.setStatus(Status.NEW);
         }
     }
 

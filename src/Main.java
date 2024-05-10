@@ -15,6 +15,9 @@ public class Main {
             SubTask subJob1 = new SubTask("Подзадача номер 2", "Готовка", Status.NEW);
             Epic epicJob = new Epic("Большая задача номер 1", "Подготовка праздника");
             taskManager.createEpic(epicJob);
+            subJob.setEpicId(epicJob.getId());
+            subJob1.setEpicId(epicJob.getId());
+
             taskManager.createSubTask(subJob);
             taskManager.createSubTask(subJob1);
 
@@ -24,18 +27,19 @@ public class Main {
                     add(subJob1.getId());
                 }
             });
-
-
-            SubTask subJob3 = new SubTask("Подзадача номер 3", "Поход за подарком", Status.NEW);
-            taskManager.createSubTask(subJob3);
+            taskManager.updateEpic(epicJob);
 
             Epic epicJob2 = new Epic("Большая задача номер 2", "День рождение", Status.NEW);
+            taskManager.createEpic(epicJob2);
+            SubTask subJob3 = new SubTask("Подзадача номер 3", "Поход за подарком", Status.NEW);
+            subJob3.setEpicId(epicJob2.getId());
+            taskManager.createSubTask(subJob3);
+
             epicJob2.setSubTaskId(new ArrayList<>() {
                 {
                     add(subJob3.getId());
                 }
             });
-            taskManager.createEpic(epicJob2);
 
             System.out.println(taskManager.getAllEpic());
             System.out.println(taskManager.getAllSubTask());
@@ -44,20 +48,19 @@ public class Main {
             job.setStatus(Status.DONE);
             taskManager.updateTask(job);
             System.out.println(job);
+
             subJob.setStatus(Status.IN_PROGRESS);
             subJob1.setStatus(Status.DONE);
             taskManager.updateSubTask(subJob);
             taskManager.updateSubTask(subJob1);
 
-            System.out.println(subJob);
             System.out.println(epicJob);
 
             taskManager.deleteSubTaskById(subJob.getId());
 
-            System.out.println(taskManager.getAllSubTask());
+            System.out.println(epicJob);
 
-            taskManager.deleteEpicById(epicJob.getId());
-            System.out.println(taskManager.getAllEpic());
-            
+            System.out.println(epicJob.getSubTaskId());
+
         }
 }
