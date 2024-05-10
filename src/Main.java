@@ -13,17 +13,18 @@ public class Main {
             taskManager.createTask(job2);
             SubTask subJob = new SubTask("Подзадача номер 1", "Уборка", Status.NEW);
             SubTask subJob1 = new SubTask("Подзадача номер 2", "Готовка", Status.NEW);
-
+            Epic epicJob = new Epic("Большая задача номер 1", "Подготовка праздника");
+            taskManager.createEpic(epicJob);
             taskManager.createSubTask(subJob);
             taskManager.createSubTask(subJob1);
-            Epic epicJob = new Epic("Большая задача номер 1", "Подготовка праздника", Status.NEW);
+
             epicJob.setSubTaskId(new ArrayList<>() {
                 {
                     add(subJob.getId());
                     add(subJob1.getId());
                 }
             });
-            taskManager.createEpic(epicJob);
+
 
             SubTask subJob3 = new SubTask("Подзадача номер 3", "Поход за подарком", Status.NEW);
             taskManager.createSubTask(subJob3);
