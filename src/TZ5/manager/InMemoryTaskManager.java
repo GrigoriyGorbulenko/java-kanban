@@ -21,6 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
+
     @Override
     public Integer createTask(Task newTask) {
         newTask.setId(nextId++);
@@ -142,7 +143,6 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
-
 
     private void syncTasks(Epic newEpic) {
         int checkDone = 0;

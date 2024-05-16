@@ -1,4 +1,4 @@
-package InMemoryHistoryManager;
+package InMemoryHistoryManagerTest;
 
 import TZ5.manager.HistoryManager;
 import TZ5.manager.Managers;
@@ -16,6 +16,7 @@ class InMemoryHistoryManagerTest {
     TaskManager taskManager = Managers.getDefault();
     final int taskId = taskManager.createTask(task);
     HistoryManager historyManager = Managers.getHistoryManager();
+
 
     @Test
     void addToTask() {

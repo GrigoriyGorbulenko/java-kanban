@@ -80,5 +80,40 @@ public class Main {
 
         System.out.println(taskManager.getHistory());
 
+        Epic epicJob5 = new Epic("Большая задача номер 5", "День рождение", Status.NEW);
+        taskManager.createEpic(epicJob5);
+        SubTask subJob5 = new SubTask("Подзадача номер 6", "Поход за подарком", Status.NEW);
+        subJob5.setEpicId(epicJob5.getId());
+        taskManager.createSubTask(subJob5);
+        epicJob5.setSubTaskId(new ArrayList<>() {
+            {
+                add(subJob5.getId());
+            }
+        });
+        printAllTasks(taskManager);
+    }
+
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTask()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Epic epic : manager.getAllEpic()) {
+            System.out.println(epic);
+
+            for (Integer i : epic.getSubTaskId() ) {
+                System.out.println("--> " + manager.getSubTaskById(i));
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (SubTask subtask : manager.getAllSubTask()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
