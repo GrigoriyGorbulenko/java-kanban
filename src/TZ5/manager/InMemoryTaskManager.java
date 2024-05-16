@@ -1,3 +1,8 @@
+package TZ5.manager;
+import TZ5.model.Epic;
+import TZ5.model.Status;
+import TZ5.model.SubTask;
+import TZ5.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,30 +13,18 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> taskMap = new HashMap<>();
     private final Map<Integer, SubTask> subTaskMap = new HashMap<>();
     private final Map<Integer, Epic> epicMap = new HashMap<>();
-
     private int nextId = 1;
 
-    private final static int MAX_HISTORY_SIZE = 10;
+    private final HistoryManager historyManager;
 
-    private final List<Task> history;
-
-    public InMemoryTaskManager(List<Task> history) {
-        this.history = history;
-    }
-
-
-
-    @Override
-    public List<Task> getHistory() {
-        return history;
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
     }
 
     @Override
     public Integer createTask(Task newTask) {
         newTask.setId(nextId++);
         this.taskMap.put(newTask.getId(), newTask);
-
-
         return newTask.getId();
     }
 
@@ -54,7 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getAllTask() {
-    return new ArrayList<>(taskMap.values());
+        return new ArrayList<>(taskMap.values());
     }
 
     @Override
@@ -64,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Epic>  getAllEpic() {
+    public ArrayList<Epic> getAllEpic() {
         return new ArrayList<>(epicMap.values());
     }
 
@@ -90,28 +83,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if(history.size() >= MAX_HISTORY_SIZE) {
-            history.removeFirst();
-        }
-        history.add(taskMap.get(id));
+        historyManager.addToTask(taskMap.get(id));
         return taskMap.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if(history.size() >= MAX_HISTORY_SIZE) {
-            history.removeFirst();
-        }
-        history.add(subTaskMap.get(id));
+        historyManager.addToTask(subTaskMap.get(id));
         return subTaskMap.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        if(history.size() >= MAX_HISTORY_SIZE) {
-            history.removeFirst();
-        }
-        history.add(epicMap.get(id));
+        historyManager.addToTask(epicMap.get(id));
         return epicMap.get(id);
     }
 
@@ -123,7 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(SubTask subTask) {
         subTaskMap.put(subTask.getId(), subTask);
-        Epic epic= epicMap.get(subTask.getEpicId());
+        Epic epic = epicMap.get(subTask.getEpicId());
         syncTasks(epic);
     }
 
@@ -154,6 +138,11 @@ public class InMemoryTaskManager implements TaskManager {
         epicMap.remove(id);
     }
 
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    }
+
 
     private void syncTasks(Epic newEpic) {
         int checkDone = 0;
@@ -165,13 +154,14 @@ public class InMemoryTaskManager implements TaskManager {
                 newEpic.setStatus(Status.IN_PROGRESS);
             } else if (subTaskMap.get(subtaskId).getStatus() == Status.DONE) {
                 checkDone++;
-            } if(subTaskMap.get(subtaskId).getStatus() == Status.NEW) {
+            }
+            if (subTaskMap.get(subtaskId).getStatus() == Status.NEW) {
                 checkNew++;
             }
         }
-        if (checkDone == newEpic.getSubTaskId().size() && checkDone > 0 ) {
+        if (checkDone == newEpic.getSubTaskId().size() && checkDone > 0) {
             newEpic.setStatus(Status.DONE);
-        } else if( checkDone > 0 && checkDone < newEpic.getSubTaskId().size()) {
+        } else if (checkDone > 0 && checkDone < newEpic.getSubTaskId().size()) {
             newEpic.setStatus(Status.IN_PROGRESS);
         } else if (checkNew == newEpic.getSubTaskId().size()) {
             newEpic.setStatus(Status.NEW);
@@ -180,12 +170,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        return "InMemoryTaskManager{" +
+        return "TZ5.manager.InMemoryTaskManager{" +
                 "taskMap=" + taskMap +
                 ", subTaskMap=" + subTaskMap +
                 ", epicMap=" + epicMap +
                 ", nextId=" + nextId +
-                ", history=" + history +
+                ", historyManager=" + historyManager +
                 '}';
     }
 }

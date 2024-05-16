@@ -1,3 +1,5 @@
+package TZ5.model;
+
 import java.util.Objects;
 
 public class Task {
@@ -67,7 +69,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "TZ5.model.Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +

@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+package TZ5.model;
 
 public class SubTask extends Task {
 
