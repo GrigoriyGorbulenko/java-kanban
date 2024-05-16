@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Main {
@@ -8,7 +7,7 @@ public class Main {
             Task job = new Task("Обычная задача", "Сходить в магазин", Status.NEW);
 
             Task job2 = new Task("Обычная задача", "Сходить в кино", Status.NEW);
-            TaskManager taskManager = new TaskManager();
+            InMemoryTaskManager taskManager = new InMemoryTaskManager(new ArrayList<>());
             taskManager.createTask(job);
             taskManager.createTask(job2);
             SubTask subJob = new SubTask("Подзадача номер 1", "Уборка", Status.NEW);
@@ -61,6 +60,21 @@ public class Main {
             System.out.println(epicJob);
 
             System.out.println(epicJob.getSubTaskId());
+            taskManager.getSubTaskById(7);
+            taskManager.getEpicById(3);
+            taskManager.getEpicById(3);
+            taskManager.getEpicById(3);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(7);
+            taskManager.getSubTaskById(5);
+
+
+
+            System.out.println(taskManager.getHistory());
 
         }
 }
