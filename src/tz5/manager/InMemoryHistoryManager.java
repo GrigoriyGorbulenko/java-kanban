@@ -1,9 +1,7 @@
-package TZ5.manager;
-import TZ5.model.Task;
+package tz5.manager;
+import tz5.model.Task;
 import java.util.ArrayList;
 import java.util.List;
-
-import static TZ5.model.Status.NEW;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final List<Task> history = new ArrayList<>();

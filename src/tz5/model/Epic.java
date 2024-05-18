@@ -1,4 +1,4 @@
-package TZ5.model;
+package tz5.model;
 
 import java.util.ArrayList;
 
@@ -26,6 +26,5 @@ public class Epic extends Task {
     public void setSubTaskId(ArrayList<Integer> subtaskId) {
         this.subTaskId = subtaskId;
     }
-
 
 }

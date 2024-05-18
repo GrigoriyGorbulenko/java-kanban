@@ -1,6 +1,6 @@
-package TZ5.manager;
+package tz5.manager;
 
-import TZ5.model.Task;
+import tz5.model.Task;
 
 import java.util.List;
 

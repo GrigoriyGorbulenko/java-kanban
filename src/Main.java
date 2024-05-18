@@ -1,9 +1,9 @@
-import TZ5.manager.Managers;
-import TZ5.manager.TaskManager;
-import TZ5.model.Epic;
-import TZ5.model.Status;
-import TZ5.model.SubTask;
-import TZ5.model.Task;
+import tz5.manager.Managers;
+import tz5.manager.TaskManager;
+import tz5.model.Epic;
+import tz5.model.Status;
+import tz5.model.SubTask;
+import tz5.model.Task;
 import java.util.ArrayList;
 
 public class Main {

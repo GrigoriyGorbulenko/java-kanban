@@ -1,4 +1,4 @@
-package TZ5.model;
+package tz5.model;
 
 public enum Status {
     NEW,

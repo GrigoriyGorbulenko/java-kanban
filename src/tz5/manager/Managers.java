@@ -1,9 +1,4 @@
-package TZ5.manager;
-
-import TZ5.manager.HistoryManager;
-import TZ5.manager.InMemoryHistoryManager;
-import TZ5.manager.InMemoryTaskManager;
-import TZ5.manager.TaskManager;
+package tz5.manager;
 
 public class Managers {
     public static TaskManager getDefault() {
