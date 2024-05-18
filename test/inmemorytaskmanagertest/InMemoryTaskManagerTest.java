@@ -43,7 +43,6 @@ public class InMemoryTaskManagerTest {
 
         Task task = new Task("Test createTask", "Test createTask description", Status.NEW);
 
-
         final Integer taskId = taskManager.createTask(task);
         final Task savedTask = taskManager.getTaskById(taskId);
 
@@ -55,11 +54,9 @@ public class InMemoryTaskManagerTest {
         final Integer subTaskId = taskManager.createSubTask(subTask);
         final SubTask savedSubTask = taskManager.getSubTaskById(subTaskId);
 
-
         taskManager.createTask(task);
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
-
 
         assertEquals(task, savedTask);
 

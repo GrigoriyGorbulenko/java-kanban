@@ -16,7 +16,6 @@ class InMemoryHistoryManagerTest {
     TaskManager taskManager = Managers.getDefault();
     HistoryManager historyManager = Managers.getHistoryManager();
 
-
     @Test
     void addTaskToHistoryShouldReturnNotNull() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
@@ -26,7 +25,5 @@ class InMemoryHistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "История пустая.");
         assertEquals(history.getFirst(), task, "Не соответствует задаче по инцдексу");
-
     }
-
 }
