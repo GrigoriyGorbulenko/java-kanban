@@ -48,7 +48,7 @@ public class Main {
         for (Epic epic : manager.getAllEpic()) {
             System.out.println(epic);
 
-            for (Integer i : epic.getSubTaskId() ) {
+            for (Integer i : epic.getSubTaskId()) {
                 System.out.println("--> " + manager.getSubTaskById(i));
             }
         }
