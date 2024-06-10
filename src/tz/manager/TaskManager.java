@@ -1,8 +1,8 @@
-package tz5.manager;
+package tz.manager;
 
-import tz5.model.Epic;
-import tz5.model.SubTask;
-import tz5.model.Task;
+import tz.model.Epic;
+import tz.model.SubTask;
+import tz.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;

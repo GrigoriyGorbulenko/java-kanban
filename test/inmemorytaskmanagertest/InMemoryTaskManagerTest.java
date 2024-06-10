@@ -1,22 +1,19 @@
 package inmemorytaskmanagertest;
 
-import tz5.manager.HistoryManager;
-import tz5.manager.InMemoryTaskManager;
-import tz5.manager.Managers;
-import tz5.manager.TaskManager;
-import tz5.model.Epic;
-import tz5.model.Status;
-import tz5.model.SubTask;
-import tz5.model.Task;
+import tz.manager.Managers;
+import tz.manager.TaskManager;
+import tz.model.Epic;
+import tz.model.Status;
+import tz.model.SubTask;
+import tz.model.Task;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static tz5.model.Status.NEW;
+import static tz.model.Status.NEW;
 
 public class InMemoryTaskManagerTest {
     TaskManager taskManager = Managers.getDefault();

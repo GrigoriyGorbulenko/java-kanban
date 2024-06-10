@@ -1,4 +1,4 @@
-package tz5.manager;
+package tz.manager;
 
 public class Managers {
     public static TaskManager getDefault() {
@@ -8,5 +8,4 @@ public class Managers {
     public static HistoryManager getHistoryManager() {
         return new InMemoryHistoryManager();
     }
-
 }

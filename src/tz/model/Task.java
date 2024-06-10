@@ -1,4 +1,4 @@
-package tz5.model;
+package tz.model;
 
 import java.util.Objects;
 

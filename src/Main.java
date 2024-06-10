@@ -1,11 +1,8 @@
-import tz5.manager.InMemoryTaskManager;
-import tz5.manager.Managers;
-import tz5.manager.TaskManager;
-import tz5.model.Epic;
-import tz5.model.Status;
-import tz5.model.SubTask;
-import tz5.model.Task;
-import java.util.ArrayList;
+import tz.manager.Managers;
+import tz.manager.TaskManager;
+import tz.model.Epic;
+import tz.model.SubTask;
+import tz.model.Task;
 
 public class Main {
 

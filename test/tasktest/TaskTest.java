@@ -1,9 +1,9 @@
 package tasktest;
 
-import tz5.model.Epic;
-import tz5.model.Status;
-import tz5.model.SubTask;
-import tz5.model.Task;
+import tz.model.Epic;
+import tz.model.Status;
+import tz.model.SubTask;
+import tz.model.Task;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

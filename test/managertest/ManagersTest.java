@@ -1,12 +1,8 @@
 package managertest;
 
 import org.junit.jupiter.api.Test;
-import tz5.manager.HistoryManager;
-import tz5.manager.InMemoryTaskManager;
-import tz5.manager.Managers;
-import tz5.manager.TaskManager;
-
-import java.util.Objects;
+import tz.manager.Managers;
+import tz.manager.TaskManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,4 @@
-package tz5.model;
-
-import java.util.Objects;
+package tz.model;
 
 public class Node<T> {
 

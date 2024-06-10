@@ -1,4 +1,4 @@
-package tz5.model;
+package tz.model;
 
 public class SubTask extends Task {
 
