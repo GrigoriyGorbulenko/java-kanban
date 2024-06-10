@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static tz5.model.Status.NEW;
 
 public class InMemoryTaskManagerTest {
     TaskManager taskManager = Managers.getDefault();
@@ -138,4 +139,26 @@ public class InMemoryTaskManagerTest {
         assertEquals(task.getDescription(), "Test createTask description");
         assertEquals(task.getStatus(), Status.NEW);
     }
+
+    @Test
+    void deleteSubtaskAlsoDeleteIdInEpic(){
+        Epic epic = new Epic("Test ", "");
+        taskManager.createEpic(epic);
+        SubTask subTask  = new SubTask("SubTest", "", epic.getId());
+        taskManager.createSubTask(subTask);
+        assertEquals(1, epic.getSubTaskId().size(), "У эпика нет подзадача");
+        taskManager.deleteSubTaskById(subTask.getId());
+        assertEquals(0, epic.getSubTaskId().size(), "У есть подзадача");
+    }
+
+    @Test
+    void setNameTaskChangeTrue() {
+        Task task = new Task("Test", "Test add ", NEW);
+        taskManager.createTask(task);
+        assertEquals("Test", task.getName(), "Имя не соответствует");
+        task.setName("Test1");
+        assertEquals("Test1", task.getName(), "Имя не соответствует");
+    }
+
+
 }

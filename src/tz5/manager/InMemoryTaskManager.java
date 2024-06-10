@@ -34,6 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTask.setId(nextId++);
         this.subTaskMap.put(subTask.getId(), subTask);
         Epic epic = epicMap.get(subTask.getEpicId());
+        epic.addSubTaskId(subTask);
         syncTasks(epic);
         return subTask.getId();
     }
@@ -82,6 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTaskMap.clear();
     }
 
+
     @Override
     public Task getTaskById(int id) {
         historyManager.addToTask(taskMap.get(id));
@@ -121,22 +123,27 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         taskMap.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
     public void deleteSubTaskById(int id) {
         Epic epic = epicMap.get(subTaskMap.get(id).getEpicId());
         subTaskMap.remove(id);
+        historyManager.remove(id);
         epic.getSubTaskId().removeIf(idSubTask -> idSubTask == id);
         syncTasks(epic);
+
     }
 
     @Override
     public void deleteEpicById(int id) {
         for (Integer idSubTask : epicMap.get(id).getSubTaskId()) {
+            historyManager.remove(idSubTask);
             subTaskMap.remove(idSubTask);
         }
         epicMap.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -170,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        return "TZ5.manager.InMemoryTaskManager{" +
+        return "InMemoryTaskManager{" +
                 "taskMap=" + taskMap +
                 ", subTaskMap=" + subTaskMap +
                 ", epicMap=" + epicMap +
