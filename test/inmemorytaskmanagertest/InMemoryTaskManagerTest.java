@@ -70,33 +70,31 @@ public class InMemoryTaskManagerTest {
 
         System.out.println(subTask.getId());
     }
+
     @Test
-    void addEpicIntoEpicShouldReturnNull() {
+    void addEpicIntoEpicShouldReturnEpicId() {
         Epic epic = new Epic("Большая задача", "Уборка");
-        taskManager.createEpic(epic);
+        Epic epic1 = new Epic("Большая задача2", "Уборка");
+        taskManager.createEpic(epic1);
         final Integer epicId = taskManager.createEpic(epic);
         final Epic savedEpic = taskManager.getEpicById(epicId);
-        SubTask subTask = new SubTask("Test createSubTask", "Test createSubTask description", Status.NEW);
-        subTask.setEpicId(epicId);
-        taskManager.createSubTask(subTask);
-        epic.setSubTaskId(new ArrayList<>() {
-            {
-                add(subTask.getId());
-                add(savedEpic.getId());
-            }
-            });
-        assertNull(taskManager.getSubTaskById(2), "Такой подзадачи не существует");
+        epic.addSubTaskId(savedEpic.getId());
+        epic.addSubTaskId(epic1.getId());
+        assertNotNull(taskManager.getEpicById(epic.getSubTaskId().get(0)));
+        assertNotNull(taskManager.getEpicById(epic.getSubTaskId().get(1)));
     }
 
     @Test
-    void setEpicIdForSubTaskWithIdSubtaskShouldReturnNull() {
+    void setEpicIdForSubTaskWithIdSubtaskShouldReturnSubtask() {
         Epic epic = new Epic("Большая задача", "Уборка");
         taskManager.createEpic(epic);
 
         SubTask subTask = new SubTask("Test createSubTask", "Test createSubTask description", Status.NEW);
         subTask.setEpicId(epic.getId());
-        subTask.getEpicId();
-        assertNull(taskManager.getEpicById(0), "Эпика не существует");
+        taskManager.createSubTask(subTask);
+        subTask.setEpicId(subTask.getId());
+        assertNotNull(taskManager.getEpicById(1), "Эпика не существует");
+        assertNotNull(taskManager.getSubTaskById(subTask.getEpicId()), "Подзадачи не существует");
     }
 
     @Test
@@ -132,16 +130,16 @@ public class InMemoryTaskManagerTest {
         Task task = new Task("Test createNewTask", "Test createTask description", Status.NEW);
         taskManager.createTask(task);
 
-        assertEquals(task.getName(), "Test createNewTask" );
+        assertEquals(task.getName(), "Test createNewTask");
         assertEquals(task.getDescription(), "Test createTask description");
         assertEquals(task.getStatus(), Status.NEW);
     }
 
     @Test
-    void deleteSubtaskAlsoDeleteIdInEpic(){
+    void deleteSubtaskAlsoDeleteIdInEpic() {
         Epic epic = new Epic("Test ", "");
         taskManager.createEpic(epic);
-        SubTask subTask  = new SubTask("SubTest", "", epic.getId());
+        SubTask subTask = new SubTask("SubTest", "", epic.getId());
         taskManager.createSubTask(subTask);
         assertEquals(1, epic.getSubTaskId().size(), "У эпика нет подзадача");
         taskManager.deleteSubTaskById(subTask.getId());
@@ -156,6 +154,4 @@ public class InMemoryTaskManagerTest {
         task.setName("Test1");
         assertEquals("Test1", task.getName(), "Имя не соответствует");
     }
-
-
 }
