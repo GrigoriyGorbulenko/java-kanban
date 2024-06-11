@@ -64,6 +64,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
     }
+
+
     private class Node<T> {
 
         private T data;
