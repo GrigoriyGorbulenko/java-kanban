@@ -1,42 +1,33 @@
+import tz.manager.FileBackedTaskManager;
 import tz.manager.Managers;
 import tz.manager.TaskManager;
 import tz.model.Epic;
 import tz.model.SubTask;
 import tz.model.Task;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        TaskManager taskManager = Managers.getDefault();
+        File file = new File("test.txt");
 
-        taskManager.createEpic(new Epic("Купить дом", ""));
-        taskManager.createEpic((new Epic("Переехать за границу", "")));
-        taskManager.createSubTask(new SubTask("Взять ипотеку", "", 1));
-        taskManager.createSubTask((new SubTask("Выбрать дом", "", 1)));
-        taskManager.createSubTask(new SubTask("Выбрать страну", "", 2));
-        taskManager.createTask(new Task("Тест", ""));
-        System.out.println(taskManager.getHistory());
-        taskManager.getEpicById(1);
-        taskManager.getTaskById(6);
-        System.out.println(taskManager.getHistory());
-        taskManager.getEpicById(2);
-        taskManager.deleteTaskById(6);
-        System.out.println(taskManager.getHistory());
-        taskManager.getEpicById(2);
-        System.out.println(taskManager.getHistory().size());
-        taskManager.getSubTaskById(3);
-        System.out.println(taskManager.getHistory());
-        taskManager.getSubTaskById(4);
-        taskManager.getSubTaskById(5);
-        System.out.println(taskManager.getHistory());
-        taskManager.deleteSubTaskById(5);
-        System.out.println(taskManager.getHistory());
-        taskManager.getSubTaskById(3);
-        taskManager.getSubTaskById(4);
-        taskManager.deleteEpicById(1);
+        FileBackedTaskManager fileManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
+        fileManager.createEpic(new Epic("Купить дом", ""));
+        fileManager.createEpic((new Epic("Переехать за границу", "")));
+        fileManager.createSubTask(new SubTask("Взять ипотеку", "", 1));
+        fileManager.createSubTask((new SubTask("Выбрать дом", "", 1)));
+        fileManager.createSubTask(new SubTask("Выбрать страну", "", 2));
+        fileManager.createTask(new Task("Тест", ""));
+        readFile();
 
-        System.out.println(taskManager.getHistory());
     }
 
     private static void printAllTasks(TaskManager manager) {
@@ -60,6 +51,12 @@ public class Main {
         System.out.println("История:");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
+        }
+    }
+    private static void readFile() throws IOException {
+        List<String> strings = Files.readAllLines(Paths.get("test.txt"));
+        for (String string : strings) {
+            System.out.println(string);
         }
     }
 }
