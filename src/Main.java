@@ -25,12 +25,10 @@ public class Main {
         fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 2));
         fileManager.createSubTask((new SubTask("Выбрать дом", "быстро", Status.NEW, 2)));
         fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 3));
+        readFile();
+        FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
 
-        fileManager.getEpicById(2);
-        System.out.println(fileManager.getHistory());
-        readFile();
-        FileBackedTaskManager fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(file);
-        readFile();
+        System.out.println(fileManager.equals(fileManager2));
     }
 
     private static void printAllTasks(TaskManager manager) {

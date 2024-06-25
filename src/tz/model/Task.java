@@ -10,7 +10,6 @@ public class Task {
     protected int id;
     protected TypeofTask typeofTask;
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
@@ -21,8 +20,6 @@ public class Task {
         this.description = description;
         this.status = status;
     }
-
-
 
     public String getName() {
         return name;
@@ -80,24 +77,12 @@ public class Task {
         return Objects.hash(name, description, status, id);
     }
 
-//    @Override
-//    public String toString() {
-//        return "TZ5.model.Task{" +
-//                "name='" + name + '\'' +
-//                ", description='" + description + '\'' +
-//                ", status=" + status +
-//                ", taskId=" + id +
-//                '}';
-//    }
-
     @Override
     public String toString() {
-        return  id +
+        return id +
                 "," + getTypeofTask().toString() +
                 "," + getName() +
                 "," + getStatus() +
                 "," + getDescription();
     }
-
-
 }

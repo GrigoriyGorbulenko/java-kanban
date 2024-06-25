@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -43,19 +44,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public ArrayList<Task> getAllTask() {
-        save();
         return super.getAllTask();
     }
 
     @Override
     public ArrayList<SubTask> getAllSubTask() {
-        save();
         return super.getAllSubTask();
     }
 
     @Override
     public ArrayList<Epic> getAllEpic() {
-        save();
         return super.getAllEpic();
     }
 
@@ -79,19 +77,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        save();
         return super.getTaskById(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        save();
         return super.getSubTaskById(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        save();
         return super.getEpicById(id);
     }
 
@@ -133,30 +128,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public List<Task> getHistory() {
-        save();
         return super.getHistory();
-    }
-
-    public void save() {
-        String fileName = "fileTaskManager.csv";
-        try (Writer writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(header);
-            writer.write("\n");
-            for (Task task : taskMap.values()) {
-                writer.write(task.toString());
-                writer.write("\n");
-            }
-            for (Epic epic : epicMap.values()) {
-                writer.write(epic.toString());
-                writer.write("\n");
-            }
-            for (SubTask subTask : subTaskMap.values()) {
-                writer.write(subTask.toString() + "," + subTask.getEpicId());
-                writer.write("\n");
-            }
-        } catch (IOException exception) {
-            throw new ManagerSaveException("Не получилось сохранить данные", exception.getCause());
-        }
     }
 
     public Task fromString(String value) {
@@ -207,5 +179,40 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException exception) {
             throw new ManagerSaveException("Данные не восстановлены");
         }
+    }
+
+    private void save() {
+        String fileName = "fileTaskManager.csv";
+        try (Writer writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(header);
+            writer.write("\n");
+            for (Task task : taskMap.values()) {
+                writer.write(task.toString());
+                writer.write("\n");
+            }
+            for (Epic epic : epicMap.values()) {
+                writer.write(epic.toString());
+                writer.write("\n");
+            }
+            for (SubTask subTask : subTaskMap.values()) {
+                writer.write(subTask.toString() + "," + subTask.getEpicId());
+                writer.write("\n");
+            }
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Не получилось сохранить данные", exception.getCause());
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileBackedTaskManager that = (FileBackedTaskManager) o;
+        return Objects.equals(file, that.file) && Objects.equals(header, that.header);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file, header);
     }
 }
