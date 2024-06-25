@@ -1,8 +1,6 @@
 package tz.manager;
-import tz.model.Epic;
-import tz.model.Status;
-import tz.model.SubTask;
-import tz.model.Task;
+import tz.model.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +8,9 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final Map<Integer, Task> taskMap = new HashMap<>();
-    private final Map<Integer, SubTask> subTaskMap = new HashMap<>();
-    private final Map<Integer, Epic> epicMap = new HashMap<>();
+    protected Map<Integer, Task> taskMap = new HashMap<>();
+    protected final Map<Integer, SubTask> subTaskMap = new HashMap<>();
+    protected final Map<Integer, Epic> epicMap = new HashMap<>();
     private int nextId = 1;
 
     private final HistoryManager historyManager;
@@ -25,6 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer createTask(Task newTask) {
         newTask.setId(nextId++);
+        newTask.setTypeofTask(TypeofTask.TASK);
         this.taskMap.put(newTask.getId(), newTask);
         return newTask.getId();
     }
@@ -32,6 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer createSubTask(SubTask subTask) {
         subTask.setId(nextId++);
+        subTask.setTypeofTask(TypeofTask.SUBTASK);
         this.subTaskMap.put(subTask.getId(), subTask);
         Epic epic = epicMap.get(subTask.getEpicId());
         epic.addSubTaskId(subTask);
@@ -42,6 +42,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer createEpic(Epic newEpic) {
         newEpic.setId(nextId++);
+        newEpic.setTypeofTask(TypeofTask.EPIC);
         this.epicMap.put(newEpic.getId(), newEpic);
 
         return newEpic.getId();

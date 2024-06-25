@@ -1,11 +1,11 @@
 package tz.manager;
 
 import tz.exception.ManagerSaveException;
-import tz.model.Epic;
-import tz.model.SubTask;
-import tz.model.Task;
+import tz.model.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,14 +134,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public List<Task> getHistory() {
         save();
         return super.getHistory();
-
-    }
-
-    @Override
-    public String toString() {
-        return "FileBackedTaskManager{" +
-                "file=" + file +
-                '}';
     }
 
     public void save() {
@@ -149,8 +141,60 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try(Writer writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(header);
             writer.write("\n");
+            for(Task task : taskMap.values()) {
+                writer.write(task.toString());
+                writer.write("\n");
+            }
+            for(Epic epic : epicMap.values()) {
+                writer.write(epic.toString());
+                writer.write("\n");
+            }
+            for(SubTask subTask : subTaskMap.values()) {
+                writer.write(subTask.toString() + "," + subTask.getEpicId());
+                writer.write("\n");
+            }
         } catch (IOException exception) {
             throw new ManagerSaveException("Не получилось сохранить данные", exception.getCause());
         }
     }
+    public Task fromString(String value) {
+        String[] split = value.split(",");
+        int id = Integer.parseInt(split[0]);
+        String name = split[2];
+        Status status = Status.valueOf(split[3]);
+        String description = split[4];
+        Task task;
+        if(TypeofTask.TASK.toString().equals(split[1])) {
+            task = new Task(name, description, status);
+            task.setId(id);
+            return task;
+        } else if(TypeofTask.EPIC.toString().equals(split[1])) {
+            task = new Epic(name, description, status);
+            task.setId(id);
+            return task;
+        } else {
+            task = new SubTask(name, description, status, Integer.parseInt(split[5]));
+            task.setId(id);
+            return task;
+        }
+    }
+    public static FileBackedTaskManager loadFromFile(File file) {
+        try {
+            List<String> strings = Files.readAllLines(Paths.get(file.getPath()));
+            FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
+
+            for(String line : strings) {
+                if(line.isEmpty() || line.isBlank() || line.equals(fileBackedTaskManager.header)) {
+                  continue;
+                }
+                Task task = fileBackedTaskManager.fromString(line);
+            }
+            return fileBackedTaskManager;
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Данные не восстановлены");
+        }
+
+    }
+
+
 }

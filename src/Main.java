@@ -2,6 +2,7 @@ import tz.manager.FileBackedTaskManager;
 import tz.manager.Managers;
 import tz.manager.TaskManager;
 import tz.model.Epic;
+import tz.model.Status;
 import tz.model.SubTask;
 import tz.model.Task;
 
@@ -20,12 +21,14 @@ public class Main {
         File file = new File("test.txt");
 
         FileBackedTaskManager fileManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
-        fileManager.createEpic(new Epic("Купить дом", ""));
-        fileManager.createEpic((new Epic("Переехать за границу", "")));
-        fileManager.createSubTask(new SubTask("Взять ипотеку", "", 1));
-        fileManager.createSubTask((new SubTask("Выбрать дом", "", 1)));
-        fileManager.createSubTask(new SubTask("Выбрать страну", "", 2));
-        fileManager.createTask(new Task("Тест", ""));
+        fileManager.createEpic(new Epic("Купить дом", "долго", Status.NEW));
+        fileManager.createEpic((new Epic("Переехать за границу", "долго", Status.DONE)));
+        fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 1));
+        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро",Status.NEW, 1)));
+        fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 2));
+        fileManager.createTask(new Task("Тест", "сразу", Status.NEW));
+        fileManager.getEpicById(1);
+        System.out.println(fileManager.getHistory());
         readFile();
 
     }
