@@ -56,7 +56,6 @@ public class Main {
             System.out.println(task);
         }
     }
-    
     private static void readFile() throws IOException {
         List<String> strings = Files.readAllLines(Paths.get("fileTaskManager.csv"));
         for (String string : strings) {
