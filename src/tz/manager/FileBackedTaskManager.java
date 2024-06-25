@@ -13,6 +13,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
     String header = "id,type,name,status,description,epic";
+
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
@@ -35,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Integer createEpic(Epic newEpic) {
-        int id =  super.createEpic(newEpic);
+        int id = super.createEpic(newEpic);
         save();
         return id;
     }
@@ -137,19 +138,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public void save() {
-        String fileName = "test.txt";
-        try(Writer writer = new BufferedWriter(new FileWriter(fileName))) {
+        String fileName = "fileTaskManager.csv";
+        try (Writer writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(header);
             writer.write("\n");
-            for(Task task : taskMap.values()) {
+            for (Task task : taskMap.values()) {
                 writer.write(task.toString());
                 writer.write("\n");
             }
-            for(Epic epic : epicMap.values()) {
+            for (Epic epic : epicMap.values()) {
                 writer.write(epic.toString());
                 writer.write("\n");
             }
-            for(SubTask subTask : subTaskMap.values()) {
+            for (SubTask subTask : subTaskMap.values()) {
                 writer.write(subTask.toString() + "," + subTask.getEpicId());
                 writer.write("\n");
             }
@@ -157,6 +158,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Не получилось сохранить данные", exception.getCause());
         }
     }
+
     public Task fromString(String value) {
         String[] split = value.split(",");
         int id = Integer.parseInt(split[0]);
@@ -164,37 +166,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Status status = Status.valueOf(split[3]);
         String description = split[4];
         Task task;
-        if(TypeofTask.TASK.toString().equals(split[1])) {
+
+        if (TypeofTask.TASK.toString().equals(split[1])) {
             task = new Task(name, description, status);
             task.setId(id);
+            task.setTypeofTask(TypeofTask.TASK);
             return task;
-        } else if(TypeofTask.EPIC.toString().equals(split[1])) {
+        } else if (TypeofTask.EPIC.toString().equals(split[1])) {
             task = new Epic(name, description, status);
             task.setId(id);
+            task.setTypeofTask(TypeofTask.EPIC);
             return task;
         } else {
-            task = new SubTask(name, description, status, Integer.parseInt(split[5]));
+            int epicId = Integer.parseInt(split[5]);
+            task = new SubTask(name, description, status, epicId);
             task.setId(id);
+            task.setTypeofTask(TypeofTask.SUBTASK);
             return task;
         }
     }
+
     public static FileBackedTaskManager loadFromFile(File file) {
         try {
             List<String> strings = Files.readAllLines(Paths.get(file.getPath()));
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
 
-            for(String line : strings) {
-                if(line.isEmpty() || line.isBlank() || line.equals(fileBackedTaskManager.header)) {
-                  continue;
+            for (String line : strings) {
+                if (line.isEmpty() || line.isBlank() || line.equals(fileBackedTaskManager.header)) {
+                    continue;
                 }
                 Task task = fileBackedTaskManager.fromString(line);
+                switch (task.getTypeofTask()) {
+                    case TASK -> fileBackedTaskManager.createTask(task);
+                    case EPIC -> fileBackedTaskManager.createEpic((Epic) task);
+                    case SUBTASK -> fileBackedTaskManager.createSubTask((SubTask) task);
+                    default -> System.out.println("Такого типа задачи нет");
+                }
             }
             return fileBackedTaskManager;
         } catch (IOException exception) {
             throw new ManagerSaveException("Данные не восстановлены");
         }
-
     }
-
-
 }

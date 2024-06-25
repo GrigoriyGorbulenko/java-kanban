@@ -18,19 +18,21 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        File file = new File("test.txt");
+        File file = new File("fileTaskManager.csv");
 
         FileBackedTaskManager fileManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
+        fileManager.createTask(new Task("Тест", "сразу", Status.NEW));
         fileManager.createEpic(new Epic("Купить дом", "долго", Status.NEW));
         fileManager.createEpic((new Epic("Переехать за границу", "долго", Status.DONE)));
-        fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 1));
-        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро",Status.NEW, 1)));
-        fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 2));
-        fileManager.createTask(new Task("Тест", "сразу", Status.NEW));
-        fileManager.getEpicById(1);
+        fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 2));
+        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро",Status.NEW, 2)));
+        fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 3));
+
+        fileManager.getEpicById(2);
         System.out.println(fileManager.getHistory());
         readFile();
-
+        FileBackedTaskManager fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(file);
+        readFile();
     }
 
     private static void printAllTasks(TaskManager manager) {
@@ -57,7 +59,7 @@ public class Main {
         }
     }
     private static void readFile() throws IOException {
-        List<String> strings = Files.readAllLines(Paths.get("test.txt"));
+        List<String> strings = Files.readAllLines(Paths.get("fileTaskManager.csv"));
         for (String string : strings) {
             System.out.println(string);
         }

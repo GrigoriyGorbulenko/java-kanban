@@ -1,7 +1,0 @@
-id,type,name,status,description,epic
-6,TASK,Тест,NEW,сразу
-1,EPIC,Купить дом,NEW,долго
-2,EPIC,Переехать за границу,DONE,долго
-3,SUBTASK,Взять ипотеку,NEW,быстро,1
-4,SUBTASK,Выбрать дом,NEW,быстро,1
-5,SUBTASK,Выбрать страну,DONE,быстро,2
