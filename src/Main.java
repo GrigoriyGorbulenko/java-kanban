@@ -7,9 +7,7 @@ import tz.model.SubTask;
 import tz.model.Task;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -58,6 +56,7 @@ public class Main {
             System.out.println(task);
         }
     }
+    
     private static void readFile() throws IOException {
         List<String> strings = Files.readAllLines(Paths.get("fileTaskManager.csv"));
         for (String string : strings) {
