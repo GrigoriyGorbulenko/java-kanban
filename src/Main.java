@@ -23,7 +23,7 @@ public class Main {
         fileManager.createEpic(new Epic("Купить дом", "долго", Status.NEW));
         fileManager.createEpic((new Epic("Переехать за границу", "долго", Status.DONE)));
         fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 2));
-        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро",Status.NEW, 2)));
+        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро", Status.NEW, 2)));
         fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 3));
 
         fileManager.getEpicById(2);
@@ -56,7 +56,7 @@ public class Main {
             System.out.println(task);
         }
     }
-    
+
     private static void readFile() throws IOException {
         List<String> strings = Files.readAllLines(Paths.get("fileTaskManager.csv"));
         for (String string : strings) {
