@@ -43,21 +43,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public ArrayList<Task> getAllTask() {
-        return super.getAllTask();
-    }
-
-    @Override
-    public ArrayList<SubTask> getAllSubTask() {
-        return super.getAllSubTask();
-    }
-
-    @Override
-    public ArrayList<Epic> getAllEpic() {
-        return super.getAllEpic();
-    }
-
-    @Override
     public void removeAllTasks() {
         super.removeAllTasks();
         save();
