@@ -27,7 +27,6 @@ public class Main {
         fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 3));
         readFile();
         FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
-
         System.out.println(fileManager.equals(fileManager2));
     }
 
