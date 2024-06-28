@@ -8,6 +8,7 @@ public class Task {
     protected String description;
     protected Status status;
     protected int id;
+    protected TypeofTask typeofTask;
 
     public Task(String name, String description) {
         this.name = name;
@@ -52,6 +53,14 @@ public class Task {
         this.id = taskId;
     }
 
+    public TypeofTask getTypeofTask() {
+        return typeofTask;
+    }
+
+    public void setTypeofTask(TypeofTask typeofTask) {
+        this.typeofTask = typeofTask;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,11 +79,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return "TZ5.model.Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", taskId=" + id +
-                '}';
+        return id +
+                "," + getTypeofTask().toString() +
+                "," + getName() +
+                "," + getStatus() +
+                "," + getDescription();
     }
 }
