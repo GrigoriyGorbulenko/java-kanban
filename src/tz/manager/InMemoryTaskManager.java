@@ -1,17 +1,18 @@
 package tz.manager;
 import tz.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
     protected Map<Integer, Task> taskMap = new HashMap<>();
     protected final Map<Integer, SubTask> subTaskMap = new HashMap<>();
     protected final Map<Integer, Epic> epicMap = new HashMap<>();
+
+    protected final Set<Task> tasksSet= new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int nextId = 1;
+
+
 
     private final HistoryManager historyManager;
 

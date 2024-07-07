@@ -1,5 +1,7 @@
 package tz.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,6 +12,10 @@ public class Task {
     protected int id;
     protected TypeofTask typeofTask;
 
+    protected Duration duration;
+
+    protected LocalDateTime startTime;
+
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
@@ -19,6 +25,12 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String name, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -59,6 +71,26 @@ public class Task {
 
     public void setTypeofTask(TypeofTask typeofTask) {
         this.typeofTask = typeofTask;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override
