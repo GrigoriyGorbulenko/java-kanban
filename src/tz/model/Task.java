@@ -2,7 +2,6 @@ package tz.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -94,6 +93,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
+
         return startTime.plusMinutes(duration.toMinutes());
     }
 
@@ -117,7 +117,7 @@ public class Task {
     public String toString() {
 
         return id +
-                "," + getTypeofTask().toString() +
+                "," + getTypeofTask() +
                 "," + getName() +
                 "," + getStatus() +
                 "," + getDescription() +

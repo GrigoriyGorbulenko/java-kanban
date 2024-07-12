@@ -5,7 +5,6 @@ import tz.model.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -13,7 +12,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, SubTask> subTaskMap = new HashMap<>();
     protected final Map<Integer, Epic> epicMap = new HashMap<>();
 
-    protected final Set<Task> tasksSet= new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    protected final Set<Task> tasksSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int nextId = 1;
 
     private final HistoryManager historyManager;
@@ -25,7 +24,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer createTask(Task newTask) {
-        if(getConflictTime(newTask)) {
+        if (getConflictTime(newTask)) {
             throw new ConflictTimeException("В указанное время уже есть задача");
         }
         newTask.setId(nextId++);
@@ -37,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer createSubTask(SubTask subTask) {
-        if(getConflictTime(subTask)) {
+        if (getConflictTime(subTask)) {
             throw new ConflictTimeException("В указанное время уже есть задача");
         }
         subTask.setId(nextId++);
@@ -46,13 +45,13 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicMap.get(subTask.getEpicId());
         epic.addSubTaskId(subTask);
         syncTasks(epic);
-        if(epic.getStartTime() == null || epic.getStartTime().isAfter(subTask.getStartTime())) {
+        if (epic.getStartTime() == null || epic.getStartTime().isAfter(subTask.getStartTime())) {
             epic.setStartTime(subTask.getStartTime());
         }
-        if(epic.getEndTime() == null || epic.getEndTime().isBefore(subTask.getEndTime())) {
+        if (epic.getEndTime() == null || epic.getEndTime().isBefore(subTask.getEndTime())) {
             epic.setEndTime(subTask.getEndTime());
         }
-        if(epic.getDuration() == null) {
+        if (epic.getDuration() == null) {
             epic.setDuration((subTask.getDuration()));
         } else {
             epic.setDuration(epic.getDuration().plus(subTask.getDuration()));
@@ -218,7 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
                         !task.getEndTime().isBefore(setTask.getStartTime()));
     }
 
-    private void  updateTasksSet() {
+    private void updateTasksSet() {
         tasksSet.clear();
         tasksSet.addAll(taskMap.values().stream()
                 .filter(task -> task.getStartTime().toLocalTime() != null)

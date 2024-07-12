@@ -2,7 +2,6 @@ package tz.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class Epic extends Task {
 
@@ -38,9 +37,11 @@ public class Epic extends Task {
     public void addSubTaskId(int id) {
         subTaskId.add(id);
     }
+
     public LocalDateTime getEndTime() {
         return endTime;
     }
+
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }

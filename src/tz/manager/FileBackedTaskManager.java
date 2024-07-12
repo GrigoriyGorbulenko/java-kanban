@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -137,13 +136,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             strings.stream().filter(line -> !line.isEmpty() && !line.isBlank() && !line.equals(fileBackedTaskManager.header))
                     .map(fileBackedTaskManager::fromString)
                     .forEach(task -> {
-                switch (task.getTypeofTask()) {
-                    case TASK -> fileBackedTaskManager.createTask(task);
-                    case EPIC -> fileBackedTaskManager.createEpic((Epic) task);
-                    case SUBTASK -> fileBackedTaskManager.createSubTask((SubTask) task);
-                    default -> System.out.println("Такого типа задачи нет");
-                }
-            });
+                        switch (task.getTypeofTask()) {
+                            case TASK -> fileBackedTaskManager.createTask(task);
+                            case EPIC -> fileBackedTaskManager.createEpic((Epic) task);
+                            case SUBTASK -> fileBackedTaskManager.createSubTask((SubTask) task);
+                            default -> System.out.println("Такого типа задачи нет");
+                        }
+                    });
             return fileBackedTaskManager;
         } catch (IOException exception) {
             throw new ManagerSaveException("Данные не восстановлены");
