@@ -1,5 +1,6 @@
-package inmemorytaskmanagertest;
-
+import org.junit.jupiter.api.BeforeEach;
+import tz.manager.HistoryManager;
+import tz.manager.InMemoryTaskManager;
 import tz.manager.Managers;
 import tz.manager.TaskManager;
 import tz.model.Epic;
@@ -15,8 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tz.model.Status.NEW;
 
-public class InMemoryTaskManagerTest {
-    TaskManager taskManager = Managers.getDefault();
+ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+    TaskManager taskManager;
+
+     @Override
+     InMemoryTaskManager createTaskManager() {
+         return new InMemoryTaskManager(Managers.getHistoryManager());
+     }
+
+     @BeforeEach
+     public void beforeEachTaskManager() {
+         taskManager = Managers.getDefault();
+     }
 
     @Test
     void createTask() {

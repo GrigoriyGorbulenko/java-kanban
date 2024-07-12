@@ -1,6 +1,3 @@
-package inmemoryhistorymanagertest;
-
-
 import tz.manager.Managers;
 import tz.manager.TaskManager;
 import tz.model.Epic;

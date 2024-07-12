@@ -6,13 +6,16 @@ import tz.model.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
-    String header = "id,type,name,status,description,epic";
+    String header = "id,type,name,status,description,startTime,endTime,duration,epic";
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
@@ -107,6 +110,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             task = new Task(name, description, status);
             task.setId(id);
             task.setTypeofTask(TypeofTask.TASK);
+            task.setStartTime(LocalDateTime.parse(split[5]));
+            task.setDuration(Duration.parse(split[7]));
             return task;
         } else if (TypeofTask.EPIC.toString().equals(split[1])) {
             task = new Epic(name, description, status);
@@ -114,10 +119,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             task.setTypeofTask(TypeofTask.EPIC);
             return task;
         } else {
-            int epicId = Integer.parseInt(split[5]);
+            int epicId = Integer.parseInt(split[8]);
             task = new SubTask(name, description, status, epicId);
             task.setId(id);
             task.setTypeofTask(TypeofTask.SUBTASK);
+            task.setStartTime(LocalDateTime.parse(split[5]));
+            task.setDuration(Duration.parse(split[7]));
             return task;
         }
     }
@@ -127,18 +134,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> strings = Files.readAllLines(Paths.get(file.getPath()));
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
 
-            for (String line : strings) {
-                if (line.isEmpty() || line.isBlank() || line.equals(fileBackedTaskManager.header)) {
-                    continue;
-                }
-                Task task = fileBackedTaskManager.fromString(line);
+            strings.stream().filter(line -> !line.isEmpty() && !line.isBlank() && !line.equals(fileBackedTaskManager.header))
+                    .map(fileBackedTaskManager::fromString)
+                    .forEach(task -> {
                 switch (task.getTypeofTask()) {
                     case TASK -> fileBackedTaskManager.createTask(task);
                     case EPIC -> fileBackedTaskManager.createEpic((Epic) task);
                     case SUBTASK -> fileBackedTaskManager.createSubTask((SubTask) task);
                     default -> System.out.println("Такого типа задачи нет");
                 }
-            }
+            });
             return fileBackedTaskManager;
         } catch (IOException exception) {
             throw new ManagerSaveException("Данные не восстановлены");
@@ -146,6 +151,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void save() {
+
         String fileName = "fileTaskManager.csv";
         try (Writer writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(header);

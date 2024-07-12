@@ -1,7 +1,7 @@
-package filebackedtaskmanager;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tz.manager.FileBackedTaskManager;
+import tz.manager.InMemoryTaskManager;
 import tz.manager.Managers;
 import tz.model.Epic;
 import tz.model.Status;
@@ -18,8 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
 
+    @Override
+    FileBackedTaskManager createTaskManager() {
+        return new FileBackedTaskManager(Managers.getHistoryManager(), new File("testFile.csv"));
+    }
+    
     @Test
     void saveAndLoadEmptyFile() {
         String header = "id,type,name,status,description,epic";

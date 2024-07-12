@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Main {
@@ -19,12 +22,13 @@ public class Main {
         File file = new File("fileTaskManager.csv");
 
         FileBackedTaskManager fileManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
-        fileManager.createTask(new Task("Тест", "сразу", Status.NEW));
-        fileManager.createEpic(new Epic("Купить дом", "долго", Status.NEW));
-        fileManager.createEpic((new Epic("Переехать за границу", "долго", Status.DONE)));
-        fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW, 2));
-        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро", Status.NEW, 2)));
-        fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, 3));
+        fileManager.createTask(new Task("Тест", "сразу", Status.NEW, LocalDateTime.now().minusHours(5), Duration.ofMinutes(130)));
+        fileManager.createEpic(new Epic("Купить дом", "долго"));
+        fileManager.createEpic((new Epic("Переехать за границу", "долго")));
+        fileManager.createSubTask(new SubTask("Взять ипотеку", "быстро", Status.NEW,
+                LocalDateTime.now(), Duration.ofMinutes(30), 2));
+        fileManager.createSubTask((new SubTask("Выбрать дом", "быстро", Status.NEW, LocalDateTime.now().minusHours(25), Duration.ofMinutes(30), 2)));
+        fileManager.createSubTask(new SubTask("Выбрать страну", "быстро", Status.DONE, LocalDateTime.now().minusHours(35), Duration.ofMinutes(30), 3));
         readFile();
         FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
         System.out.println(fileManager.equals(fileManager2));
@@ -55,9 +59,8 @@ public class Main {
     }
 
     private static void readFile() throws IOException {
+
         List<String> strings = Files.readAllLines(Paths.get("fileTaskManager.csv"));
-        for (String string : strings) {
-            System.out.println(string);
-        }
+        strings.forEach(System.out::println);
     }
 }

@@ -1,5 +1,3 @@
-package tasktest;
-
 import tz.model.Epic;
 import tz.model.Status;
 import tz.model.SubTask;
