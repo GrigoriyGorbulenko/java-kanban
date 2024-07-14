@@ -1,5 +1,3 @@
-package managertest;
-
 import org.junit.jupiter.api.Test;
 import tz.manager.Managers;
 import tz.manager.TaskManager;

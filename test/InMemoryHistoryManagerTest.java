@@ -1,16 +1,16 @@
-package inmemoryhistorymanagertest;
-
-
 import tz.manager.Managers;
 import tz.manager.TaskManager;
 import tz.model.Epic;
+import tz.model.Status;
 import tz.model.SubTask;
 import tz.model.Task;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static tz.model.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
@@ -19,8 +19,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void addTaskToHistoryShouldReturnNotNull() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        Task task2 = new Task("Test addNewTask2", "Test addNewTask description", NEW);
+        Task task = new Task("Test ", " ", Status.NEW, LocalDateTime.now(), Duration.ofMinutes(2));
+        Task task2 = new Task("Test2 ", " ", Status.NEW, LocalDateTime.now().plusMinutes(5), Duration.ofMinutes(2));
         taskManager.createTask(task);
         taskManager.createTask(task2);
         taskManager.getTaskById(task.getId());
@@ -31,9 +31,9 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void addTaskShouldReturnNotNull() {
-        Epic epic = new Epic("Test ", "");
+        Epic epic = new Epic("Test createEpic", "Test createEpic description");
         taskManager.createEpic(epic);
-        SubTask subTask = new SubTask("SubTest", "", epic.getId());
+        SubTask subTask = new SubTask("Test ", " ", Status.NEW, LocalDateTime.now(), Duration.ofMinutes(2), 1);
         taskManager.createSubTask(subTask);
         taskManager.getEpicById(epic.getId());
         taskManager.getSubTaskById(subTask.getId());
@@ -42,15 +42,15 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void deleteTaskShouldReturnNull() {
-        Task task = new Task("Test ", "Test add ", NEW);
+        Task task = new Task("Test ", " ", Status.NEW, LocalDateTime.now(), Duration.ofMinutes(2));
         taskManager.createTask(task);
         taskManager.getTaskById(task.getId());
         taskManager.deleteTaskById(task.getId());
         assertNull(taskManager.getHistory().getFirst(), "Таска не удалена");
 
-        Epic epic = new Epic("Test ", "");
+        Epic epic = new Epic("Test createEpic", "Test createEpic description");
         taskManager.createEpic(epic);
-        SubTask subTask = new SubTask("SubTest", "", epic.getId());
+        SubTask subTask = new SubTask("Test ", " ", Status.NEW, LocalDateTime.now().plusMinutes(10), Duration.ofMinutes(2), 2);
         taskManager.createSubTask(subTask);
         taskManager.getEpicById(epic.getId());
         taskManager.getSubTaskById(subTask.getId());

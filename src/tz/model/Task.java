@@ -1,5 +1,7 @@
 package tz.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -9,6 +11,8 @@ public class Task {
     protected Status status;
     protected int id;
     protected TypeofTask typeofTask;
+    protected LocalDateTime startTime;
+    protected Duration duration;
 
     public Task(String name, String description) {
         this.name = name;
@@ -17,8 +21,15 @@ public class Task {
 
     public Task(String name, String description, Status status) {
         this.name = name;
+        this.status = status;
+    }
+
+    public Task(String name, String  description, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public String getName() {
@@ -61,6 +72,31 @@ public class Task {
         this.typeofTask = typeofTask;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public Long getDurationOfMinutes(Duration duration) {
+        return duration.toMinutes();
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+
+        return startTime.plusMinutes(duration.toMinutes());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,10 +115,14 @@ public class Task {
 
     @Override
     public String toString() {
+
         return id +
-                "," + getTypeofTask().toString() +
+                "," + getTypeofTask() +
                 "," + getName() +
                 "," + getStatus() +
-                "," + getDescription();
+                "," + getDescription() +
+                "," + getStartTime() +
+                "," + getEndTime() +
+                "," + getDuration();
     }
 }
