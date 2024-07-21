@@ -21,6 +21,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         }
         writeResponse((new ErrorResponse("Данный запрос не поддерживается")), exchange,404);
     }
+
     private void handleGet(HttpExchange exchange) throws IOException {
             writeResponse(gson.toJson(taskManager.getPrioritizedTasks()),exchange, 200);
     }
