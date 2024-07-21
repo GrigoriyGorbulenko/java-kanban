@@ -20,12 +20,12 @@ public class HttpTaskServer {
     private final HttpServer httpServer;
     public static Gson gson;
 
-    public HttpTaskServer() throws IOException {
+    public HttpTaskServer(TaskManager manager) throws IOException {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
                 .create();
-        taskManager = Managers.getDefault();
+        taskManager = manager;
         httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.createContext("/subtasks", new SubTaskHandler());
@@ -33,15 +33,14 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler());
         httpServer.createContext("/prioritized", new PrioritizedHandler());
     }
+    public HttpTaskServer() throws IOException {
+        this(Managers.getDefault());
+    }
 
     public HttpTaskServer(TaskManager taskManager, HttpServer httpServer, Gson gson) {
         HttpTaskServer.taskManager = taskManager;
         this.httpServer = httpServer;
         HttpTaskServer.gson = gson;
-    }
-
-    public static Gson getGson() {
-        return gson;
     }
 
     public void stop() {

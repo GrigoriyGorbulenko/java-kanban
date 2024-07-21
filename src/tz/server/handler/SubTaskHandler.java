@@ -27,7 +27,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void handleGet(HttpExchange exchange) throws IOException {
+    void handleGet(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
         try {
@@ -40,10 +40,12 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                     SubTask subTask = taskManager.getSubTaskById(id);
                     writeResponse(subTask, exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -62,10 +64,12 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                     taskManager.updateSubTask(subTask);
                     writeResponse(subTask, exchange, 201);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
         } catch (ConflictTimeException e) {
             writeResponse(e.getMessage(), exchange, 406);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -84,10 +88,12 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                     taskManager.deleteSubTaskById(id);
                     writeResponse("Задача удалена", exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 }

@@ -41,11 +41,13 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     Task task = taskManager.getTaskById(id);
                     writeResponse(task, exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"),
                         exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -64,11 +66,13 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     taskManager.updateTask(task);
                     writeResponse(task, exchange, 201);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"),
                         exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -86,11 +90,13 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     taskManager.deleteTaskById(id);
                     writeResponse("Задача удалена", exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"),
                         exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 }

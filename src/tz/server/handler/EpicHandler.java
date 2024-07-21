@@ -44,10 +44,12 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     String sub = gson.toJson(taskManager.getSubTasksByEpic(id));
                     writeResponse(sub, exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -57,21 +59,22 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         Epic epic = gson.fromJson(requestBody, Epic.class);
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-
-        switch (splitPathLength) {
-            case 2 -> {
-                taskManager.createEpic(epic);
-                writeResponse(epic, exchange, 201);
-            }
-            case 3 -> {
-                try {
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
+                    taskManager.createEpic(epic);
+                    writeResponse(epic, exchange, 201);
+                }
+                case 3 -> {
                     taskManager.updateEpic(epic);
                     writeResponse(epic, exchange, 201);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
-            default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 
@@ -89,10 +92,12 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     taskManager.deleteEpicById(id);
                     writeResponse("Задача удалена", exchange, 200);
                 }
-                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (RuntimeException e) {
+            writeResponse(e.getMessage(), exchange, 500);
         }
     }
 }

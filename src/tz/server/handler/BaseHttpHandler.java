@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 import static tz.server.HttpTaskServer.gson;
 
-public class BaseHttpHandler {
+public  class BaseHttpHandler {
     void writeResponse(Object body, HttpExchange exchange, int code) throws IOException {
         String responseJson = gson.toJson(body);
         byte[] responseBytes = responseJson.getBytes(StandardCharsets.UTF_8);
