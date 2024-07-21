@@ -5,8 +5,8 @@ import com.sun.net.httpserver.HttpHandler;
 import tz.exception.ConflictTimeException;
 import tz.exception.NotFoundException;
 import tz.model.Task;
-import tz.server.ErrorResponse;
-import tz.server.HttpMethod;
+import tz.server.support.ErrorResponse;
+import tz.server.support.HttpMethod;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -71,6 +71,8 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             }
         } catch (NotFoundException e) {
             writeResponse(e.getMessage(), exchange, 404);
+        } catch (ConflictTimeException e) {
+            writeResponse(e.getMessage(), exchange, 406);
         } catch (RuntimeException e) {
             writeResponse(e.getMessage(), exchange, 500);
         }

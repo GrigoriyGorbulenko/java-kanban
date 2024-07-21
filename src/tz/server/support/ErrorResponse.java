@@ -1,4 +1,4 @@
-package tz.server;
+package tz.server.support;
 
 public class ErrorResponse {
     private final String errorMessage;

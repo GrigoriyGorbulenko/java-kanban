@@ -4,8 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import tz.exception.NotFoundException;
 import tz.model.Epic;
-import tz.server.ErrorResponse;
-import tz.server.HttpMethod;
+import tz.server.support.ErrorResponse;
+import tz.server.support.HttpMethod;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

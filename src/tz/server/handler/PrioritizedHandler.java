@@ -2,13 +2,12 @@ package tz.server.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import tz.exception.NotFoundException;
-import tz.server.ErrorResponse;
-import tz.server.HttpMethod;
+import tz.server.support.ErrorResponse;
+import tz.server.support.HttpMethod;
 
 import java.io.IOException;
 
-import static tz.server.HttpMethod.GET;
+import static tz.server.support.HttpMethod.GET;
 import static tz.server.HttpTaskServer.gson;
 import static tz.server.HttpTaskServer.taskManager;
 

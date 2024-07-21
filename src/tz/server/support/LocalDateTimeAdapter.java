@@ -1,4 +1,4 @@
-package tz.server;
+package tz.server.support;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
