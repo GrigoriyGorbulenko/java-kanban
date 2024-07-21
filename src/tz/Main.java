@@ -30,7 +30,5 @@ public class Main {
                 Duration.ofMinutes(2), 1);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask2);
-
-
     }
 }

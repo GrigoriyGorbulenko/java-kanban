@@ -7,8 +7,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static tz.server.HttpTaskServer.taskManager;
-
 public class InMemoryTaskManager implements TaskManager {
 
     protected Map<Integer, Task> taskMap = new HashMap<>();
