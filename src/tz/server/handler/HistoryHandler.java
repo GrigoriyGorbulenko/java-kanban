@@ -20,11 +20,12 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             handleGet(exchange);
             return;
         }
-        writeResponse((new ErrorResponse("Данный запрос не поддерживается")), exchange,404);
+        writeResponse((new ErrorResponse("Данный запрос не поддерживается")), exchange, 404);
     }
+
     private void handleGet(HttpExchange exchange) throws IOException {
-        if(!taskManager.getHistory().isEmpty()) {
-            writeResponse(gson.toJson(taskManager.getHistory()),exchange, 200);
+        if (!taskManager.getHistory().isEmpty()) {
+            writeResponse(gson.toJson(taskManager.getHistory()), exchange, 200);
         } else {
             writeResponse(new ErrorResponse("Задачи в истории отсутствуют"), exchange, 404);
         }

@@ -35,6 +35,7 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler());
         httpServer.createContext("/prioritized", new PrioritizedHandler());
     }
+
     public HttpTaskServer() throws IOException {
         this(Managers.getDefault());
     }
@@ -49,6 +50,7 @@ public class HttpTaskServer {
         httpServer.stop(1);
         System.out.println("Сервер остановлен");
     }
+
     public void start() {
         System.out.println("Сервер запущен на порту: " + PORT);
         httpServer.start();

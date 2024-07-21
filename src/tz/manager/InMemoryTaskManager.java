@@ -141,8 +141,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTaskMap.get(id) == null) {
             throw new NotFoundException("Задачи с указаным id не найдено");
         }
-            historyManager.addToTask(subTaskMap.get(id));
-            return subTaskMap.get(id);
+        historyManager.addToTask(subTaskMap.get(id));
+        return subTaskMap.get(id);
     }
 
     @Override
@@ -150,8 +150,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (epicMap.get(id) == null) {
             throw new NotFoundException("Задачи с указаным id не найдено");
         }
-            historyManager.addToTask(epicMap.get(id));
-            return epicMap.get(id);
+        historyManager.addToTask(epicMap.get(id));
+        return epicMap.get(id);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epicMap.get(epicId) == null) {
             throw new NotFoundException("Задачи с указаным id не найдено");
         }
-         return subTaskMap.values().stream()
+        return subTaskMap.values().stream()
                 .filter(subTask -> subTask.getEpicId() == epicId)
                 .toList();
     }
