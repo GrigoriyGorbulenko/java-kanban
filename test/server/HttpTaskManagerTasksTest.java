@@ -27,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tz.model.Status.NEW;
+import static tz.server.support.ConstantStatusCode.*;
 
 
 public class HttpTaskManagerTasksTest {
@@ -75,7 +76,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(CODE201, response.statusCode());
 
         List<Task> tasksFromManager = taskManager.getAllTask();
 
@@ -106,7 +107,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(406, response.statusCode());
+        assertEquals(CODE406, response.statusCode());
         List<Task> tasksFromManager = taskManager.getAllTask();
     }
 
@@ -128,7 +129,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         Task tasksFromManager = taskManager.getTaskById(id);
 
@@ -154,7 +155,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(404, response.statusCode());
+        assertEquals(CODE404, response.statusCode());
     }
 
     @Test
@@ -180,7 +181,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         // проверяем, что создалась одна задача с корректным именем
         List<Task> tasksFromManager = taskManager.getAllTask();
@@ -212,7 +213,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode(), "Задача не удалена");
+        assertEquals(CODE200, response.statusCode(), "Задача не удалена");
         assertEquals("\"Задача удалена\"", response.body(), "Задача не удалена");
         assertEquals(1, taskManager.getAllTask().size(), "Некорректное количество задач");
     }

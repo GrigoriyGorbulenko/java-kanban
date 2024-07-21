@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tz.model.Status.NEW;
+import static tz.server.support.ConstantStatusCode.*;
 
 public class HttpTaskManagerSubTasksTest {
     TaskManager taskManager = new InMemoryTaskManager(Managers.getHistoryManager());
@@ -74,7 +75,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(CODE201, response.statusCode());
 
         List<SubTask> tasksFromManager = taskManager.getAllSubTask();
 
@@ -106,7 +107,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(406, response.statusCode(), "Задачу удалось создать");
+        assertEquals(CODE406, response.statusCode(), "Задачу удалось создать");
     }
 
     @Test
@@ -131,7 +132,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         SubTask tasksFromManager = taskManager.getSubTaskById(id);
 
@@ -161,7 +162,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(404, response.statusCode());
+        assertEquals(CODE404, response.statusCode());
     }
 
     @Test
@@ -190,7 +191,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         List<SubTask> tasksFromManager = taskManager.getAllSubTask();
 
@@ -223,7 +224,7 @@ public class HttpTaskManagerSubTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode(), "Задача не удалена");
+        assertEquals(CODE200, response.statusCode(), "Задача не удалена");
         assertEquals("\"Задача удалена\"", response.body(), "Задача не удалена");
         assertEquals(1, taskManager.getAllSubTask().size(), "Некорректное количество задач");
     }

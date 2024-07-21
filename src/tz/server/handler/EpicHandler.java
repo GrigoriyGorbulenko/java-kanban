@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 import static tz.server.HttpTaskServer.gson;
 import static tz.server.HttpTaskServer.taskManager;
+import static tz.server.support.ConstantStatusCode.*;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     @Override
@@ -22,7 +23,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             case GET -> handleGet(exchange);
             case POST -> handlePost(exchange);
             case DELETE -> handleDelete(exchange);
-            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, 404);
+            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, CODE404);
         }
     }
 
@@ -32,24 +33,24 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         try {
             switch (splitPathLength) {
                 case 2 -> {
-                    writeResponse(taskManager.getAllEpic(), exchange, 200);
+                    writeResponse(taskManager.getAllEpic(), exchange, CODE200);
                 }
                 case 3 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     Epic epic = taskManager.getEpicById(id);
-                    writeResponse(epic, exchange, 200);
+                    writeResponse(epic, exchange, CODE200);
                 }
                 case 4 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     String sub = gson.toJson(taskManager.getSubTasksByEpic(id));
-                    writeResponse(sub, exchange, 200);
+                    writeResponse(sub, exchange, CODE200);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 
@@ -63,18 +64,18 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             switch (splitPathLength) {
                 case 2 -> {
                     taskManager.createEpic(epic);
-                    writeResponse(epic, exchange, 201);
+                    writeResponse(epic, exchange, CODE201);
                 }
                 case 3 -> {
                     taskManager.updateEpic(epic);
-                    writeResponse(epic, exchange, 201);
+                    writeResponse(epic, exchange, CODE201);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 
@@ -85,19 +86,19 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             switch (splitPathLength) {
                 case 2 -> {
                     taskManager.removeAllEpics();
-                    writeResponse("Задачи удалены", exchange, 200);
+                    writeResponse("Задачи удалены", exchange, CODE200);
                 }
                 case 3 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     taskManager.deleteEpicById(id);
-                    writeResponse("Задача удалена", exchange, 200);
+                    writeResponse("Задача удалена", exchange, CODE200);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 }

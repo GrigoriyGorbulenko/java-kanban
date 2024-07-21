@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static tz.model.Status.NEW;
+import static tz.server.support.ConstantStatusCode.CODE200;
 
 public class HttpTaskManagerHistoryTest {
     TaskManager taskManager = new InMemoryTaskManager(Managers.getHistoryManager());
@@ -93,7 +94,7 @@ public class HttpTaskManagerHistoryTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         assertEquals(6, taskManager.getHistory().size(), "Некорректное количество задач");
     }

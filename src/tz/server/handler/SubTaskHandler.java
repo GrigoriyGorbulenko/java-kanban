@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 import static tz.server.HttpTaskServer.gson;
 import static tz.server.HttpTaskServer.taskManager;
+import static tz.server.support.ConstantStatusCode.*;
 
 public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
     @Override
@@ -23,7 +24,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
             case GET -> handleGet(exchange);
             case POST -> handlePost(exchange);
             case DELETE -> handleDelete(exchange);
-            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, 404);
+            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, CODE404);
         }
     }
 
@@ -33,19 +34,19 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
         try {
             switch (splitPathLength) {
                 case 2 -> {
-                    writeResponse(taskManager.getAllSubTask(), exchange, 200);
+                    writeResponse(taskManager.getAllSubTask(), exchange, CODE200);
                 }
                 case 3 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     SubTask subTask = taskManager.getSubTaskById(id);
-                    writeResponse(subTask, exchange, 200);
+                    writeResponse(subTask, exchange, CODE200);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 
@@ -58,18 +59,18 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
             switch (splitPathLength) {
                 case 2 -> {
                     taskManager.createSubTask(subTask);
-                    writeResponse(subTask, exchange, 201);
+                    writeResponse(subTask, exchange, CODE201);
                 }
                 case 3 -> {
                     taskManager.updateSubTask(subTask);
-                    writeResponse(subTask, exchange, 201);
+                    writeResponse(subTask, exchange, CODE201);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (ConflictTimeException e) {
-            writeResponse(e.getMessage(), exchange, 406);
+            writeResponse(e.getMessage(), exchange, CODE406);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 
@@ -81,19 +82,19 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
             switch (splitPathLength) {
                 case 2 -> {
                     taskManager.removeAllSubTasks();
-                    writeResponse("Задачи удалены", exchange, 200);
+                    writeResponse("Задачи удалены", exchange, CODE200);
                 }
                 case 3 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     taskManager.deleteSubTaskById(id);
-                    writeResponse("Задача удалена", exchange, 200);
+                    writeResponse("Задача удалена", exchange, CODE200);
                 }
-                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, 404);
+                default -> writeResponse(new ErrorResponse("Неверно указаны данные"), exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 }

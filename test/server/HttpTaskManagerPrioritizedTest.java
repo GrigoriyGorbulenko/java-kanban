@@ -27,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static tz.model.Status.NEW;
+import static tz.server.support.ConstantStatusCode.CODE200;
 
 public class HttpTaskManagerPrioritizedTest {
     TaskManager taskManager = new InMemoryTaskManager(Managers.getHistoryManager());
@@ -94,7 +95,7 @@ public class HttpTaskManagerPrioritizedTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         List<Task> priority = taskManager.getPrioritizedTasks();
 

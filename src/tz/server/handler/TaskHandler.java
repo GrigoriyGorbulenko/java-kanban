@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 import static tz.server.HttpTaskServer.gson;
 import static tz.server.HttpTaskServer.taskManager;
+import static tz.server.support.ConstantStatusCode.*;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
@@ -24,7 +25,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             case GET -> handleGet(exchange);
             case POST -> handlePost(exchange);
             case DELETE -> handleDelete(exchange);
-            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, 404);
+            default -> writeResponse((new ErrorResponse("Неверный HTTP-метод")), exchange, CODE404);
         }
     }
 
@@ -34,20 +35,20 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         try {
             switch (splitPathLength) {
                 case 2 -> {
-                    writeResponse(taskManager.getAllTask(), exchange, 200);
+                    writeResponse(taskManager.getAllTask(), exchange, CODE200);
                 }
                 case 3 -> {
                     int id = Integer.parseInt(splitPath[2]);
                     Task task = taskManager.getTaskById(id);
-                    writeResponse(task, exchange, 200);
+                    writeResponse(task, exchange, CODE200);
                 }
                 default -> writeResponse(new ErrorResponse("Неверно указаны данные"),
                         exchange, 404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 
@@ -60,21 +61,21 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             switch (splitPathLength) {
                 case 2 -> {
                     taskManager.createTask(task);
-                    writeResponse(task, exchange, 201);
+                    writeResponse(task, exchange, CODE201);
                 }
                 case 3 -> {
                     taskManager.updateTask(task);
-                    writeResponse(task, exchange, 201);
+                    writeResponse(task, exchange, CODE201);
                 }
                 default -> writeResponse(new ErrorResponse("Неверно указаны данные"),
-                        exchange, 404);
+                        exchange, CODE404);
             }
         } catch (NotFoundException e) {
-            writeResponse(e.getMessage(), exchange, 404);
+            writeResponse(e.getMessage(), exchange, CODE404);
         } catch (ConflictTimeException e) {
-            writeResponse(e.getMessage(), exchange, 406);
+            writeResponse(e.getMessage(), exchange, CODE406);
         } catch (RuntimeException e) {
-            writeResponse(e.getMessage(), exchange, 500);
+            writeResponse(e.getMessage(), exchange, CODE500);
         }
     }
 

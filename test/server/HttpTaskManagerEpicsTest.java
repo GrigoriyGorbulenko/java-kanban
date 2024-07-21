@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tz.model.Status.NEW;
+import static tz.server.support.ConstantStatusCode.*;
 
 public class HttpTaskManagerEpicsTest {
     TaskManager taskManager = new InMemoryTaskManager(Managers.getHistoryManager());
@@ -71,7 +72,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(CODE201, response.statusCode());
 
         List<Epic> tasksFromManager = taskManager.getAllEpic();
 
@@ -102,7 +103,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         Epic tasksFromManager = taskManager.getEpicById(id);
 
@@ -130,7 +131,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(404, response.statusCode());
+        assertEquals(CODE404, response.statusCode());
     }
 
     @Test
@@ -152,7 +153,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(404, response.statusCode());
+        assertEquals(CODE404, response.statusCode());
     }
 
     @Test
@@ -182,7 +183,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
 
         List<Epic> tasksFromManager = taskManager.getAllEpic();
 
@@ -218,7 +219,7 @@ public class HttpTaskManagerEpicsTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(CODE200, response.statusCode());
         assertEquals("\"Задача удалена\"", response.body());
         assertEquals(1, taskManager.getAllEpic().size(), "Некорректное количество задач");
     }

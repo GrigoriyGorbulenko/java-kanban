@@ -105,9 +105,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllSubTasks() {
-//        if (subTaskMap.isEmpty()) {
-//            throw new NotFoundException("Задачи не найдены");
-//        }
+        if (subTaskMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         subTaskMap.clear();
         getAllEpic().forEach(epic -> {
             epic.setSubTaskId(new ArrayList<>());
@@ -118,9 +118,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpics() {
-//        if (epicMap.isEmpty()) {
-//            throw new NotFoundException("Задачи не найдены");
-//        }
+        if (epicMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         epicMap.clear();
         subTaskMap.clear();
         updateTasksSet();
