@@ -5,7 +5,6 @@ import tz.model.SubTask;
 import tz.server.HttpTaskServer;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -24,7 +23,5 @@ public class Main {
         SubTask subTask2 = new SubTask("Test2 ", " ", NEW, LocalDateTime.now().plusMinutes(22), Duration.ofMinutes(2), 1);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask2);
-
-        HttpClient client = HttpClient.newHttpClient();
     }
 }

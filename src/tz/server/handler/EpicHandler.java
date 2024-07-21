@@ -29,33 +29,25 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     private void handleGet(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-        switch (splitPathLength) {
-            case 2 -> {
-                try {
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
                     writeResponse(taskManager.getAllEpic(), exchange, 200);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
-            }
-            case 3 -> {
-                int id = Integer.parseInt(splitPath[2]);
-                try {
-                Epic epic = taskManager.getEpicById(id);
+                case 3 -> {
+                    int id = Integer.parseInt(splitPath[2]);
+                    Epic epic = taskManager.getEpicById(id);
                     writeResponse(epic, exchange, 200);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
-            }
-            case 4 -> {
-                int id = Integer.parseInt(splitPath[2]);
-                try {
+                case 4 -> {
+                    int id = Integer.parseInt(splitPath[2]);
                     String sub = gson.toJson(taskManager.getSubTasksByEpic(id));
                     writeResponse(sub, exchange, 200);
-                } catch (NotFoundException e) {
-                        writeResponse(e.getMessage(), exchange, 404);
                 }
+                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
             }
-            default -> writeResponse(new ErrorResponse("Not found"), exchange, 404);
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
         }
     }
 
@@ -68,32 +60,39 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
         switch (splitPathLength) {
             case 2 -> {
-                    taskManager.createEpic(epic);
-                    writeResponse(epic, exchange, 201);
+                taskManager.createEpic(epic);
+                writeResponse(epic, exchange, 201);
             }
             case 3 -> {
-                int id = Integer.parseInt(splitPath[2]);
-                if (taskManager.getEpicById(id) == null) {
-                    writeResponse(new ErrorResponse("Задачи с указаным id не найдено"),
-                            exchange, 404);
-                } else {
+                try {
                     taskManager.updateEpic(epic);
                     writeResponse(epic, exchange, 201);
+                } catch (NotFoundException e) {
+                    writeResponse(e.getMessage(), exchange, 404);
                 }
             }
-            default -> writeResponse(new ErrorResponse("Not found"), exchange, 404);
+            default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
         }
     }
 
     private void handleDelete(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-        if (splitPathLength == 3) {
-            int id = Integer.parseInt(splitPath[2]);
-            taskManager.deleteEpicById(id);
-            writeResponse(new ErrorResponse("Задача удалена"), exchange, 200);
-        } else {
-            writeResponse(new ErrorResponse("Задача не указана"), exchange, 404);
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
+                    taskManager.removeAllEpics();
+                    writeResponse("Задачи удалены", exchange, 200);
+                }
+                case 3 -> {
+                    int id = Integer.parseInt(splitPath[2]);
+                    taskManager.deleteEpicById(id);
+                    writeResponse("Задача удалена", exchange, 200);
+                }
+                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"), exchange, 404);
+            }
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
         }
     }
 }

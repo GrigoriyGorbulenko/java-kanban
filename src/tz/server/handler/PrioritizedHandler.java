@@ -2,6 +2,7 @@ package tz.server.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import tz.exception.NotFoundException;
 import tz.server.ErrorResponse;
 import tz.server.HttpMethod;
 
@@ -22,11 +23,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         writeResponse((new ErrorResponse("Данный запрос не поддерживается")), exchange,404);
     }
     private void handleGet(HttpExchange exchange) throws IOException {
-        if(!taskManager.getHistory().isEmpty()) {
             writeResponse(gson.toJson(taskManager.getPrioritizedTasks()),exchange, 200);
-        } else {
-            writeResponse(new ErrorResponse("Задачи в истории отсутствуют"), exchange, 404);
-        }
     }
 }
 

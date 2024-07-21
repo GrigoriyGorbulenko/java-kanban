@@ -31,24 +31,21 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     private void handleGet(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-        switch (splitPathLength) {
-            case 2 -> {
-                try {
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
                     writeResponse(taskManager.getAllTask(), exchange, 200);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
-            }
-            case 3 -> {
-                int id = Integer.parseInt(splitPath[2]);
-                try {
+                case 3 -> {
+                    int id = Integer.parseInt(splitPath[2]);
                     Task task = taskManager.getTaskById(id);
                     writeResponse(task, exchange, 200);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
+                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                        exchange, 404);
             }
-            default -> writeResponse(new ErrorResponse("Not found"), exchange, 404);
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
         }
     }
 
@@ -57,37 +54,43 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         Task task = gson.fromJson(requestBody, Task.class);
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-
-        switch (splitPathLength) {
-            case 2 -> {
-                try {
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
                     taskManager.createTask(task);
                     writeResponse(task, exchange, 201);
-                } catch (ConflictTimeException e) {
-                    writeResponse(e.getMessage(), exchange, 406);
                 }
-            }
-            case 3 -> {
-                try {
+                case 3 -> {
                     taskManager.updateTask(task);
                     writeResponse(task, exchange, 201);
-                } catch (NotFoundException e) {
-                    writeResponse(e.getMessage(), exchange, 404);
                 }
+                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                        exchange, 404);
             }
-            default -> writeResponse(new ErrorResponse("Not found"), exchange, 404);
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
         }
     }
 
     private void handleDelete(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         int splitPathLength = splitPath.length;
-        if (splitPathLength == 3) {
-            int id = Integer.parseInt(splitPath[2]);
-            taskManager.deleteTaskById(id);
-            writeResponse(new ErrorResponse("Задача удалена"), exchange, 200);
-        } else {
-            writeResponse(new ErrorResponse("Задача не указана"), exchange, 404);
+        try {
+            switch (splitPathLength) {
+                case 2 -> {
+                    taskManager.removeAllTasks();
+                    writeResponse("Задачи удалены", exchange, 200);
+                }
+                case 3 -> {
+                    int id = Integer.parseInt(splitPath[2]);
+                    taskManager.deleteTaskById(id);
+                    writeResponse("Задача удалена", exchange, 200);
+                }
+                default -> writeResponse(new ErrorResponse("Данный запрос не поддерживается"),
+                        exchange, 404);
+            }
+        } catch (NotFoundException e) {
+            writeResponse(e.getMessage(), exchange, 404);
         }
     }
 }

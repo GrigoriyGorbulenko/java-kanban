@@ -7,6 +7,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static tz.server.HttpTaskServer.taskManager;
+
 public class InMemoryTaskManager implements TaskManager {
 
     protected Map<Integer, Task> taskMap = new HashMap<>();
@@ -96,12 +98,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTasks() {
+        if (taskMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         taskMap.clear();
         updateTasksSet();
     }
 
     @Override
     public void removeAllSubTasks() {
+        if (subTaskMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         subTaskMap.clear();
         getAllEpic().forEach(epic -> {
             epic.setSubTaskId(new ArrayList<>());
@@ -112,6 +120,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpics() {
+        if (epicMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         epicMap.clear();
         subTaskMap.clear();
         updateTasksSet();
@@ -175,6 +186,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(int id) {
+        if (taskMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
         taskMap.remove(id);
         historyManager.remove(id);
         updateTasksSet();
@@ -182,6 +196,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTaskById(int id) {
+        if (subTaskMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
         Epic epic = epicMap.get(subTaskMap.get(id).getEpicId());
         subTaskMap.remove(id);
         historyManager.remove(id);
@@ -193,6 +210,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpicById(int id) {
+        if (epicMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
         epicMap.get(id).getSubTaskId().forEach(idSubTask -> {
             historyManager.remove(idSubTask);
             subTaskMap.remove(idSubTask);
