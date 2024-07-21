@@ -1,5 +1,6 @@
 package tz.manager;
 import tz.exception.ConflictTimeException;
+import tz.exception.NotFoundException;
 import tz.model.*;
 
 import java.time.Duration;
@@ -71,17 +72,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getAllTask() {
+        if (taskMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         return new ArrayList<>(taskMap.values());
     }
 
     @Override
     public ArrayList<SubTask> getAllSubTask() {
-
+        if (subTaskMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         return new ArrayList<>(subTaskMap.values());
     }
 
     @Override
     public ArrayList<Epic> getAllEpic() {
+        if (epicMap.isEmpty()) {
+            throw new NotFoundException("Задачи не найдены");
+        }
         return new ArrayList<>(epicMap.values());
     }
 
@@ -111,20 +120,36 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
+        if (taskMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
         historyManager.addToTask(taskMap.get(id));
         return taskMap.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        historyManager.addToTask(subTaskMap.get(id));
-        return subTaskMap.get(id);
+        if (subTaskMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
+            historyManager.addToTask(subTaskMap.get(id));
+            return subTaskMap.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        historyManager.addToTask(epicMap.get(id));
-        return epicMap.get(id);
+        if (epicMap.get(id) == null) {
+            throw new NotFoundException("Задачи с указаным id не найдено");
+        }
+            historyManager.addToTask(epicMap.get(id));
+            return epicMap.get(id);
+    }
+
+    @Override
+    public List<SubTask> getSubTasksByEpic(int epicId) {
+         return subTaskMap.values().stream()
+                .filter(subTask -> subTask.getEpicId() == epicId)
+                .toList();
     }
 
     @Override
