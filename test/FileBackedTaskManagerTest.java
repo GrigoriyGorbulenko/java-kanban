@@ -1,4 +1,6 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import tz.exception.NotFoundException;
 import tz.manager.FileBackedTaskManager;
 
 import tz.manager.Managers;
@@ -15,15 +17,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Override
     protected FileBackedTaskManager createTaskManager() {
         return new FileBackedTaskManager(Managers.getHistoryManager(), new File("testFile.csv"));
     }
-    
+
     @Test
     void saveAndLoadEmptyFile() {
         String header = "id,type,name,status,description,startTime,endTime,duration,epic";
@@ -32,7 +35,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             File file = File.createTempFile("testFile", "csv");
 
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Managers.getHistoryManager(), file);
-            List<String> strings = Files.readAllLines(Paths.get(file.getPath()));
+
             assertEquals(0, fileBackedTaskManager.getAllTask().size(), "Не удалось создать файл");
             assertEquals(0, fileBackedTaskManager.getAllEpic().size(), "Не удалось создать файл");
             assertEquals(0, fileBackedTaskManager.getAllSubTask().size(), "Не удалось создать файл");
@@ -40,9 +43,13 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
                     LocalDateTime.now().minusHours(5), Duration.ofMinutes(130)));
 
             assertEquals(1, fileBackedTaskManager.getAllTask().size(), "Не удалось добавить задачу");
+            Assertions.fail("Expected NotFoundException");
+        } catch (NotFoundException e) {
+            assertNotEquals("", e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Test
