@@ -1,5 +1,7 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tz.exception.NotFoundException;
 import tz.manager.TaskManager;
 import tz.model.Epic;
 import tz.model.Status;
@@ -118,7 +120,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(task2);
         assertEquals(2, taskManager.getAllTask().size());
         taskManager.removeAllTasks();
-        assertEquals(0, taskManager.getAllTask().size());
+        try {
+            assertEquals(0, taskManager.getAllTask().size());
+            Assertions.fail("Expected NotFoundException");
+        } catch (NotFoundException e) {
+            assertNotEquals("", e.getMessage());
+        }
     }
 
     @Test
@@ -131,7 +138,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(subTask2);
         assertEquals(2, taskManager.getAllSubTask().size());
         taskManager.removeAllSubTasks();
-        assertEquals(0, taskManager.getAllSubTask().size());
+        try {
+            assertEquals(0, taskManager.getAllSubTask().size());
+            Assertions.fail("Expected NotFoundException");
+        } catch (NotFoundException e) {
+            assertNotEquals("", e.getMessage());
+        }
     }
 
     @Test
@@ -144,7 +156,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epic2.setStartTime(LocalDateTime.now().plusMinutes(30));
         assertEquals(2, taskManager.getAllEpic().size());
         taskManager.removeAllEpics();
-        assertEquals(0, taskManager.getAllEpic().size());
+        try {
+            assertEquals(0, taskManager.getAllEpic().size());
+            Assertions.fail("Expected NotFoundException");
+        } catch (NotFoundException e) {
+            assertNotEquals("", e.getMessage());
+        }
     }
 
     @Test
